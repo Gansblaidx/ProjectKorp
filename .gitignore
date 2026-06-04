@@ -1,0 +1,14 @@
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+bin/
+dist/
+
+.env
+.env.local
+.env.*.local
+
+*.log
