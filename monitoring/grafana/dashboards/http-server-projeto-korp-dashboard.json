@@ -30,7 +30,7 @@
       "options": { "colorMode": "background", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "textMode": "auto" },
       "title": "Service Availability",
       "type": "stat",
-      "targets": [ { "expr": "up{job=\"http-server-projeto-korp\"}", "legendFormat": "Status", "refId": "A" } ]
+      "targets": [ { "expr": "up{job=\"http-server-projeto\"}", "legendFormat": "Status", "refId": "A" } ]
     },
     {
       "datasource": { "type": "prometheus", "uid": "" },
@@ -46,7 +46,7 @@
       "options": { "colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "textMode": "auto" },
       "title": "Total Requests",
       "type": "stat",
-      "targets": [ { "expr": "sum(http_requests_total{job=\"http-server-projeto-korp\"})", "legendFormat": "Total", "refId": "A" } ]
+      "targets": [ { "expr": "sum(http_requests_total{job=\"http-server-projeto\"})", "legendFormat": "Total", "refId": "A" } ]
     },
     {
       "datasource": { "type": "prometheus", "uid": "" },
@@ -66,7 +66,7 @@
       "options": { "legend": { "calcs": [], "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
       "title": "Request Rate (req/s)",
       "type": "timeseries",
-      "targets": [ { "expr": "rate(http_requests_total{job=\"http-server-projeto-korp\"}[1m])", "legendFormat": "{{method}} {{endpoint}} {{status}}", "refId": "A" } ]
+      "targets": [ { "expr": "rate(http_requests_total{job=\"http-server-projeto\"}[1m])", "legendFormat": "{{method}} {{endpoint}} {{status}}", "refId": "A" } ]
     },
     {
       "datasource": { "type": "prometheus", "uid": "" },
@@ -82,14 +82,14 @@
       "options": { "legend": { "calcs": [], "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "single" } },
       "title": "Total Requests Over Time",
       "type": "timeseries",
-      "targets": [ { "expr": "sum(increase(http_requests_total{job=\"http-server-projeto-korp\"}[5m]))", "legendFormat": "Requests (5m window)", "refId": "A" } ]
+      "targets": [ { "expr": "sum(increase(http_requests_total{job=\"http-server-projeto\"}[5m]))", "legendFormat": "Requests (5m window)", "refId": "A" } ]
     }
   ],
   "schemaVersion": 39,
-  "tags": ["projeto-korp"],
+  "tags": ["projeto"],
   "templating": { "list": [] },
   "time": { "from": "now-1h", "to": "now" },
-  "title": "HTTP Server Projeto Korp",
-  "uid": "http-server-projeto-korp",
+  "title": "HTTP Server Projeto",
+  "uid": "http-server-projeto",
   "version": 3
 }

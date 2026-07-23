@@ -18,7 +18,7 @@ type Response struct {
 
 var requestsTotal = promauto.NewCounter(prometheus.CounterOpts{
 	Name: "http_requests_total",
-	Help: "Total de requisições no endpoint /projeto-korp",
+	Help: "Total de requisições no endpoint /projeto",
 })
 
 var serviceUp = promauto.NewGauge(prometheus.GaugeOpts{
@@ -35,13 +35,13 @@ func main() {
 		json.NewEncoder(w).Encode(map[string]string{"status": "healthy"})
 	})
 
-	http.HandleFunc("/projeto-korp", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/projeto", func(w http.ResponseWriter, r *http.Request) {
 		requestsTotal.Inc()
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(Response{
-			Nome: "Projeto Korp",
+			Nome: "Projeto de Monitoramento",
 			Horario: time.Now().UTC().Format(time.RFC3339),
 		})
 	})

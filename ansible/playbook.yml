@@ -2,7 +2,7 @@
 #
 # Uso: ansible-playbook ansible/playbook.yml
 #
-- name: Projeto Korp - Full Environment Provisioning
+- name: FullMonitoringProject - Full Environment Provisioning
   hosts: all
   become: yes
 
@@ -82,7 +82,7 @@
 
     - name: "09 - Create Docker bridge network korp-network"
       ansible.builtin.shell: |
-        docker network inspect korp-network >/dev/null 2>&1 || docker network create korp-network
+        docker network inspect project-network >/dev/null 2>&1 || docker network create project-network
       changed_when: false
       # Cria rede bridge compartilhada entre containers caso não exista
 
@@ -132,7 +132,7 @@
 
     - name: "14 - Validate service response"
       ansible.builtin.uri:
-        url: "http://127.0.0.1:80/projeto-korp"
+        url: "http://127.0.0.1:80/projeto"
         method: GET
         return_content: yes
         status_code: 200
@@ -140,7 +140,7 @@
       until: response.status == 200
       retries: 12
       delay: 5
-      # Valida endpoint principal /projeto-korp
+      # Valida endpoint principal /projeto
 
     - name: "15 - Show service response"
       ansible.builtin.debug:
@@ -197,6 +197,6 @@
           Health Check: http://localhost/health (status: {{ health_check.status }})
           Métricas Prometheus: http://localhost:9090
           Grafana Dashboard: http://localhost:3000 (credenciais: admin/admin)
-          API do Serviço: http://localhost/projeto-korp
+          API do Serviço: http://localhost/projeto
       # Exibe resumo final com todas as URLs e endpoints
 

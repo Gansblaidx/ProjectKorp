@@ -1,12 +1,12 @@
-# Projeto Korp
+# Projeto de Monitoramento Completo
 
 Serviço HTTP containerizado em Golang com monitoramento e observabilidade via Prometheus e Grafana, orquestrado por Docker Compose e provisionado automaticamente com Ansible, atingindo mais de 100000 requisições por segundo.
 
 ## Performance
 
 ```
-/ProjectKorp$ wrk -t16 -c550 -d60s --latency http://127.0.0.1:80/projeto-korp
-Running 1m test @ http://127.0.0.1:80/projeto-korp
+/FullMonitoringProject$ wrk -t16 -c550 -d60s --latency http://127.0.0.1:80/projeto
+Running 1m test @ http://127.0.0.1:80/projeto
   16 threads and 550 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
     Latency     5.31ms    4.26ms  56.69ms   78.06%
@@ -24,7 +24,7 @@ Transfer/sec:     22.99MB
 
 ## Visão Geral
 
-O Projeto Korp implementa um microsserviço que demonstra boas práticas de:
+O Projeto implementa um microsserviço que demonstra boas práticas de:
 - **Desenvolvimento**: aplicação HTTP em Go com métricas expostas
 - **Containerização**: Docker com imagens otimizadas e Docker Compose para orquestração
 - **Redes**: configuração de rede bridge para comunicação inter-container
@@ -41,13 +41,13 @@ O Projeto Korp implementa um microsserviço que demonstra boas práticas de:
   │  Cliente │            │  │              Docker Network (bridge)            │    │
   │  (curl / │            │  │                                                 │    │
   │ browser) │            │  │  ┌─────────────┐       ┌──────────────────────┐ │    │
-  └────┬─────┘            │  │  │    NGINX    │       │ http-server-projeto- │ │    │
-       │                  │  │  │             │──────▶│       korp           │ │    │
+  └────┬─────┘            │  │  │    NGINX    │       │ http-server-projeto  │ │    │
+       │                  │  │  │             │──────▶│                      │ │    │
        │  :80             │  │  │  Proxy      │       │                      │ │    │
        └──────────────────┼──┼─▶│  Reverso    │       │  Go HTTP Server      │ │    │
                           │  │  │             │       │  porta 8080          │ │    │
                           │  │  └─────────────┘       │                      │ │    │
-                          │  │                        │  GET /projeto-korp   │ │    │
+                          │  │                        │  GET /projeto        │ │    │
                           │  │                        │  GET /metrics        │ │    │
                           │  │                        └──────────┬───────────┘ │    │
                           │  │                                   │             │    │
@@ -73,11 +73,11 @@ O Projeto Korp implementa um microsserviço que demonstra boas práticas de:
 
 ### Fluxo de Requisição
 
-1. Cliente faz requisição para `http://localhost:80/projeto-korp`
+1. Cliente faz requisição para `http://localhost:80/projeto`
 2. NGINX (proxy reverso) recebe a requisição
-3. NGINX encaminha para `http-server-projeto-korp:8080/projeto-korp`
+3. NGINX encaminha para `http-server-projeto:8080/projeto`
 4. Serviço Go processa e retorna JSON com timestamp UTC
-5. Serviço registra métrica de duração da requisição
+5. Serviço registra métrica da requisição
 6. Prometheus coleta métricas a cada 10 segundos
 7. Grafana consulta Prometheus e exibe no dashboard
 
@@ -95,8 +95,8 @@ O Projeto Korp implementa um microsserviço que demonstra boas práticas de:
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/seu-usuario/ProjectKorp.git
-cd ProjectKorp
+git clone https://github.com/Gansblaidx/FullMonitoringProject.git
+cd FullMonitoringProject
 ```
 
 2. Inicie os containers:
@@ -106,11 +106,11 @@ docker compose up -d --build
 
 3. Aguarde os serviços iniciarem e teste:
 ```bash
-curl http://localhost:80/projeto-korp
+curl http://localhost:80/projeto
 ```
 
 4. Acesse os serviços:
-   - **API do Serviço**: http://localhost:80/projeto-korp
+   - **API do Serviço**: http://localhost:80/projeto
    - **Health Check**: http://localhost/health
    - **Métricas Prometheus**: http://localhost:9090
    - **Grafana Dashboard**: http://localhost:3000 (admin/admin)
@@ -119,8 +119,8 @@ curl http://localhost:80/projeto-korp
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/seu-usuario/ProjectKorp.git
-cd ProjectKorp
+git clone https://github.com/Gansblaidx/FullMonitoringProject.git
+cd FullMonitoringProject
 ```
 
 2. Execute o playbook Ansible:
@@ -130,7 +130,7 @@ ansible-playbook ansible/playbook.yml
 
 3. O playbook irá:
    - Instalar Docker (se necessário)
-   - Criar rede bridge `korp-network`
+   - Criar rede bridge `project-network`
    - Build e deploy de todos os containers
    - Validar o funcionamento do serviço
    - Exibir informações de acesso
@@ -143,7 +143,7 @@ O serviço expõe as seguintes métricas via Prometheus:
 
 | Métrica | Descrição |
 |---------|-----------|
-| `http_requests_total` | Total de requisições no endpoint `/projeto-korp` / Usado para medir req/s |
+| `http_requests_total` | Total de requisições no endpoint `/projeto` / Usado para medir req/s |
 | `service_up` | Indicador de disponibilidade do serviço (UP, DOWN) |
 | `request` | Métrica auto-gerada pelo Prometheus (status do target) |
 
@@ -160,26 +160,26 @@ O dashboard padrão inclui:
 
 - **Raw Prometheus**: http://localhost:9090
   - Consultar métrica: `/api/v1/query?query=http_requests_total`
-  
+
 - **Grafana**: http://localhost:3000
   - Credenciais padrão: `admin` / `admin`
   - Dashboard provisionado automaticamente
 
 ## Endpoints da Aplicação
 
-### GET `/projeto-korp`
+### GET `/projeto`
 
 Retorna informações do projeto com timestamp UTC.
 
 **Exemplo de requisição:**
 ```bash
-curl http://localhost:80/projeto-korp
+curl http://localhost:80/projeto
 ```
 
 **Resposta:**
 ```json
 {
-  "nome": "Projeto Korp",
+  "nome": "Projeto de Monitoramento",
   "horario": "2026-06-04T11:20:15Z"
 }
 ```
@@ -214,22 +214,22 @@ curl http://localhost/metrics
 ### http-server-projeto-korp
 - **Imagem**: Build local da aplicação Go
 - **Porta**: 8080 (interna, não exposta)
-- **Rede**: korp-network
+- **Rede**: project-network
 - **Reinicialização**: unless-stopped
 
 ### nginx
 - **Imagem**: nginx:latest
 - **Portas**: 80:80 (host:container)
 - **Volumes**: Configurações de proxy reverso
-- **Rede**: korp-network
-- **Dependências**: http-server-projeto-korp
+- **Rede**: project-network
+- **Dependências**: http-server-projeto
 - **Reinicialização**: unless-stopped
 
 ### prometheus
 - **Imagem**: prom/prometheus:latest
 - **Portas**: 9090:9090 (host:container)
 - **Volumes**: Configuração de scrape
-- **Rede**: korp-network
+- **Rede**: project-network
 - **Intervalo de coleta**: 10 segundos
 - **Reinicialização**: unless-stopped
 
@@ -237,7 +237,7 @@ curl http://localhost/metrics
 - **Imagem**: grafana/grafana:latest
 - **Portas**: 3000:3000 (host:container)
 - **Volumes**: Dashboards e datasources provisionados
-- **Rede**: korp-network
+- **Rede**: project-network
 - **Senha admin**: admin (configurável via variável de ambiente)
 - **Reinicialização**: unless-stopped
 
@@ -264,7 +264,7 @@ Resultado: imagem pequena e segura (~20MB)
 ### Prometheus
 
 **Scrape Config:**
-- Coleta métricas do job `http-server-projeto-korp`
+- Coleta métricas do job `http-server-projeto`
 - Intervalo de 10 segundos
 - Endpoint: `/metrics`
 

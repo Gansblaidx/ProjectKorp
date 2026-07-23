@@ -1,4 +1,4 @@
-module http-server-projeto-korp
+module http-server-projeto
 
 go 1.22
 
